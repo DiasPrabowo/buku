@@ -26,20 +26,13 @@ Route::controller(LoginRegisterController::class)->group(function() {
    });
    
 
-Route::get('/', function () {
-    return view('welcome');
+   Route::middleware(['auth', 'check.reviewer'])->group(function () {
+    Route::get('/review-buku', [ReviewBukuController::class, 'index'])->name('review.index');
+    Route::get('/review-buku/create', [ReviewBukuController::class, 'create'])->name('review.create');
+    Route::post('/review-buku', [ReviewBukuController::class, 'store'])->name('review.store');
 });
 
-Route::get('/about', function () {
-    return view('about', [
-        'name' => 'Yusuf Catur Saputro',
-        'email' => 'yusuf@gmail.com'
-    ]);
-});
-
-// Route::get('/posts', [PostController::class, 'index']);
-
-Route::get('/buku', [BukuController::class, 'index']);
+Route::get('/', [BukuController::class, 'index']);
 Route::get('/buku/create', [BukuController::class, 'create'])->name('create');
 Route::post('/buku', [BukuController::class, 'store'])->name('store');
 Route::delete('/buku/{id}', [BukuController::class, 'destroy'])->name('destroy');
